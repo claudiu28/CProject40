@@ -32,7 +32,7 @@ int optiune_valida(int optiune){
 void adaugare_tranzactie(){
     // daca am depasit numarul de tranzactii
     if(numar_tranzactie >= 1000){
-        printf("Nu mai sunt loc de tranzactii, au depasit limita maxima!!!");
+        printf("Nu mai sunt loc de tranzactii, au depasit limita maxima!!!\n");
     }
     struct Tranzactii *t = &tranzactii[numar_tranzactie];
     while (getchar() != '\n'); // golire buffer
@@ -41,14 +41,14 @@ void adaugare_tranzactie(){
     printf("Introduceti tipul(adaugare/retragere): ");
     fgets(t->tip,sizeof (t->tip), stdin);
     t->tip[strcspn(t->tip, "\n")] = '\0';
-    if(strcmp(t->tip,"adaugare") !=0 && strcmp(t->tip,"retragere") != 0){ printf("Date invalide!"); return; }
+    if(strcmp(t->tip,"adaugare") !=0 && strcmp(t->tip,"retragere") != 0){ printf("Date invalide!\n"); return; }
 
 
     // citire suma + verficare daca suma introdusa este negativa iesim din functie
     float suma;
     printf("Introduceti suma dorita: ");
     scanf("%f", &suma);
-    if(suma < 0) {printf("Date invalide!!!"); return;}
+    if(suma < 0) {printf("Date invalide!!!\n"); return;}
     else t->suma = suma;
     while (getchar() != '\n');
 
@@ -57,7 +57,7 @@ void adaugare_tranzactie(){
     printf("Descriere tranzactie: ");
     fgets(t->descriere, sizeof(t->descriere), stdin);
     t->descriere[strcspn(t->descriere, "\n")] = '\0';
-    if(strcmp(t->descriere,"") == 0) { printf("Date invalide!"); return; }
+    if(strcmp(t->descriere,"") == 0) { printf("Date invalide!\n"); return; }
 
 
     // citire data in care a fost facuta tranzactia + verficarea datelor daca e zi daca e luna + considerare an intre [1900,2050]
@@ -69,7 +69,7 @@ void adaugare_tranzactie(){
         t->luna = luna;
         t->an = an;
     }else{
-        printf("Date invalide"); return;
+        printf("Date invalide!!\n"); return;
     }
 
     while (getchar() != '\n');
@@ -138,7 +138,7 @@ void vizualizare_in_functie_de_tip(char tipul[]){
             printf("Data este: %d-%d-%d\n", t->zi,t->luna,t->an);
             printf("Descirerea este: %s\n", t->descriere);
         }else {
-            printf("Nu corespunde nici unui timp!!!"); return;
+            printf("Nu corespunde nici unui timp!!!\n"); return;
         }
     }
 
@@ -171,7 +171,7 @@ void vizualizare_in_interval_de_la_initial_final(int zi_initial, int luna_initia
                     printf("Descirerea este: %s\n", t->descriere);
                 }else{
                     // in caz ca nu se afla data in interval
-                    printf("Nu se afla in interval!!!");
+                    printf("Nu se afla in interval!!!\n");
                 }
             }
         }
@@ -182,7 +182,7 @@ void descarca_date(){
     // salvam datele curente pe care le avem deocamdata in structura
     FILE *date = fopen("save_datatransactions.txt", "w"); // fisierul in care se vor afisa si salva datele
     if(date == NULL){
-        printf("Eroare de deschidere a filei!!!"); // in caz ca nu putem deschide fila
+        printf("Eroare de deschidere a filei!!!\n"); // in caz ca nu putem deschide fila
         return;
     }else{
         // afisam datele in fisier
@@ -190,24 +190,28 @@ void descarca_date(){
             struct Tranzactii t = tranzactii[i];
             fprintf(date, "%f %d %d %d %s %s\n", t.suma, t.zi, t.luna, t.an, t.descriere, t.tip);
         }
+        // inchidem fisierul cu datele adaugate
         fclose(date);
-        printf("File transmise cu succes!!!");
+        printf("File transmise cu succes!!!\n");
     }
 }
 
 void incarca_date(){
+    // citirie date din fisier a datelor si adaugare in structura
     FILE *date = fopen("data_financiare.txt", "r");
     if (date == NULL) {
         printf("Eroare de deschidere a filei!!!\n");
         return;
     }
 
-    while (fscanf(date, "%d %d %d %499[^\n] %f %9[^\n]", &tranzactii[numar_tranzactie].zi,&tranzactii[numar_tranzactie].an,&tranzactii[numar_tranzactie].luna,tranzactii[numar_tranzactie].descriere,&tranzactii[numar_tranzactie].suma,tranzactii[numar_tranzactie].tip) == 6) {
+    // citim datele din fisier si adunam la numarul de tranzactii
+    while (fscanf(date, "%d %d %d %499[^\n] %f %9[^\n]", &tranzactii[numar_tranzactie].zi,&tranzactii[numar_tranzactie].luna,&tranzactii[numar_tranzactie].an,tranzactii[numar_tranzactie].descriere,&tranzactii[numar_tranzactie].suma,tranzactii[numar_tranzactie].tip) == 6) {
         numar_tranzactie++;
         if (numar_tranzactie >= 1000) {
             break;
         }
     }
+
     fclose(date);
 }
 
@@ -231,10 +235,10 @@ void meniu(int optiune){
             }else if(optiune == 3){
                 // in cazul in care avem mai multi bani in cont si suma actuala este pozitiva afisam in functie de cat am adugat in cont cat am retras si diferenta dintre acestea doua
                 if((float)(sold_cont_adaugare() - sold_cont_stergere()) > 0){
-                if(sold_cont_adaugare() > 0)printf("%f",sold_cont_adaugare());
-                if(sold_cont_stergere() < 0)printf("%f",sold_cont_stergere());
-                if(sold_cont() >= 0)
-                    printf("Soldul contului este: %f\n", sold_cont());}
+                    if(sold_cont_adaugare() > 0)printf("%f",sold_cont_adaugare());
+                    if(sold_cont_stergere() < 0)printf("%f",sold_cont_stergere());
+                    if(sold_cont() >= 0)
+                        printf("Soldul contului este: %f\n", sold_cont());printf("\n");}
                 else
                     printf("Nu se poate calcula soldul contului, va rog revizuiti datele!\n");
 
@@ -267,11 +271,11 @@ void meniu(int optiune){
             else if(optiune == 8){
                 // in cazul in care dorim sa oprim aplicatia oprim executia si afisam un mesaj corespunzator
                 meniu = 1;
-                printf("La revedere!!!");
+                printf("La revedere!!!\n");
             }
         }else{
             // caz in care nu e valida optiunea
-            printf("Optiune invalida!!!");
+            printf("Optiune invalida!!!\n");
         }
     }
 }
