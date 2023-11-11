@@ -137,8 +137,6 @@ void vizualizare_in_functie_de_tip(char tipul[]){
             printf("Suma este: %f\n", t->suma);
             printf("Data este: %d-%d-%d\n", t->zi,t->luna,t->an);
             printf("Descirerea este: %s\n", t->descriere);
-        }else {
-            printf("Nu corespunde nici unui timp!!!\n"); return;
         }
     }
 
@@ -234,11 +232,11 @@ void meniu(int optiune){
                 else{printf("Nu sunt tranzactii de afisat!!!\n");}
             }else if(optiune == 3){
                 // in cazul in care avem mai multi bani in cont si suma actuala este pozitiva afisam in functie de cat am adugat in cont cat am retras si diferenta dintre acestea doua
-                if((float)(sold_cont_adaugare() - sold_cont_stergere()) > 0){
-                    if(sold_cont_adaugare() > 0)printf("%f",sold_cont_adaugare());
-                    if(sold_cont_stergere() < 0)printf("%f",sold_cont_stergere());
+                if((float)(sold_cont_adaugare() + sold_cont_stergere()) > 0){
+                    if(sold_cont_adaugare() > 0)printf("Sold pozitiv: %f\n",sold_cont_adaugare());
+                    if(sold_cont_stergere() < 0)printf("Sold negativ: %f\n",sold_cont_stergere());
                     if(sold_cont() >= 0)
-                        printf("Soldul contului este: %f\n", sold_cont());printf("\n");}
+                        printf("Soldul contului balansat este: %f\n", sold_cont());printf("\n");}
                 else
                     printf("Nu se poate calcula soldul contului, va rog revizuiti datele!\n");
 
