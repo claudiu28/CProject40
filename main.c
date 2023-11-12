@@ -392,6 +392,7 @@ void meniu(int optiune){
 }
 
 
+
 int main(){
     int optiune = 0;
     meniu(optiune);
