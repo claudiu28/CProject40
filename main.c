@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
+#include <stdlib.h>
 
 // strcuctura pentru tranzactii, ce contine data(format: zi luna an), suma, tip si descrierea
 struct Tranzactii{
@@ -29,6 +30,9 @@ int optiune_valida(int optiune){
         return 1;
     return 0;
 }
+
+
+
 
 void adaugare_tranzactie(){
     // daca am depasit numarul de tranzactii
@@ -78,6 +82,7 @@ void adaugare_tranzactie(){
     numar_tranzactie++;
     printf("Adaugare tranzactie cu success!!!\n");
 }
+
 void adauga_tranzactie_test(int zi, int luna, int an, float suma, char *tip, char *descriere) {
     // test pentru adugare tranzactie
     if (numar_tranzactie >= 1000) {
@@ -93,6 +98,27 @@ void adauga_tranzactie_test(int zi, int luna, int an, float suma, char *tip, cha
     strcpy(t->descriere, descriere);
 }
 
+
+void test_adauga_test(){
+    adauga_tranzactie_test(1, 1, 2020, 100, "adaugare", "Depunere banca");
+    adauga_tranzactie_test(2, 1, 2020, 50, "retragere", "Retragere banca");
+
+    // Verificăm că numărul de tranzacții s-a incrementat corect
+    assert(numar_tranzactie == 2);
+
+    // Verificăm că tipul, suma și descrierea tranzacțiilor au fost adăugate corect
+    assert(strcmp(tranzactii[0].tip, "adaugare") == 0);
+    assert(tranzactii[0].suma == 100);
+    assert(strcmp(tranzactii[0].descriere, "Depunere banca") == 0);
+
+    assert(strcmp(tranzactii[1].tip, "retragere") == 0);
+    assert(tranzactii[1].suma == 50);
+    assert(strcmp(tranzactii[1].descriere, "Retragere banca") == 0);
+}
+
+
+
+
 void vizualizare(){
     // afisarea tuturor tranzactior
     for(int i = 0; i < numar_tranzactie; ++i){
@@ -105,6 +131,9 @@ void vizualizare(){
         printf("Descirerea este: %s\n", t->descriere);
     }
 }
+
+
+
 float sold_cont_adaugare(){
     float suma = 0;
     // in functie de tip cati bani mai avem in cont pe ramura adaugare
@@ -159,6 +188,7 @@ void testeaza_sold(){
 
 
 
+
 void vizualizare_in_functie_de_tip(char tipul[]){
     // analizam tipul (adaugare/ retragere) si afisam corespunzator in caz ca nu corespunze tipului afisam un mesaj desptre tipul afisat citit gresit
     for(int i = 0; i < numar_tranzactie; i++){
@@ -173,6 +203,24 @@ void vizualizare_in_functie_de_tip(char tipul[]){
     }
 
 }
+
+void test_vizualizare_in_functie_de_tip() {
+    numar_tranzactie = 0;
+    // teste pentru vizualizare in functie de tip
+    adauga_tranzactie_test(1, 1, 2020, 100, "adaugare", "Depunere in banca");
+    adauga_tranzactie_test(2, 1, 2020, 50, "retragere", "Retragere in banca");
+    adauga_tranzactie_test(3, 1, 2020, 200, "adaugare", "Depunere in banca");
+
+    vizualizare_in_functie_de_tip("adaugare");
+
+    assert(tranzactii[0].suma == 100.000000);
+    assert(tranzactii[2].suma == 200.000000);
+
+}
+
+
+
+
 
 void vizualizare_in_interval_de_la_initial_final(int zi_initial, int luna_initial, int an_initial, int zi_final, int luna_final, int an_final){
     // interval de timp (zi,luna,an -> zi1,luna1,an1)
@@ -207,6 +255,7 @@ void vizualizare_in_interval_de_la_initial_final(int zi_initial, int luna_initia
         }
     }
 }
+
 
 void descarca_date(){
     // salvam datele curente pe care le avem deocamdata in structura
@@ -245,15 +294,31 @@ void incarca_date(){
     fclose(date);
 }
 
+void test_descarca() {
+    numar_tranzactie = 0; // reset numar tranzatie
+
+    adauga_tranzactie_test(1, 1, 2020, 100, "adaugare", "Depunere banca");
+    adauga_tranzactie_test(2, 2, 2020, 50, "retragere", "Retragere banca");
+    adauga_tranzactie_test(3, 3, 2020, 200, "adaugare", "Depunere ATM");
+    adauga_tranzactie_test(4, 4, 2020, 300, "retragere", "Retragere ATM");
+
+    // descarcam date in fisierul corepsunzator
+    descarca_date();
+}
+
+
+void ruleaza_teste(){
+    test_adauga_test();
+    testeaza_sold();
+    test_vizualizare_in_functie_de_tip();
+    test_descarca();
+}
 
 void meniu(int optiune){
     int meniu = 0;
-    testeaza_sold();
-    int contor = 0;
-    for(int i = 0; i < numar_tranzactie; i++){
-        contor++;
-    }
-    numar_tranzactie = numar_tranzactie - contor;
+    ruleaza_teste();
+    system("cls");
+    numar_tranzactie = 0;
     // cat timp meniu va fii 0
     while(meniu == 0){
         meniu_optiuni(); // afisam optiunile din meniu
