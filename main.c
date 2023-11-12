@@ -103,10 +103,10 @@ void test_adauga_test(){
     adauga_tranzactie_test(1, 1, 2020, 100, "adaugare", "Depunere banca");
     adauga_tranzactie_test(2, 1, 2020, 50, "retragere", "Retragere banca");
 
-    // Verificăm că numărul de tranzacții s-a incrementat corect
+    // numar de tranzactii este corect, vf
     assert(numar_tranzactie == 2);
 
-    // Verificăm că tipul, suma și descrierea tranzacțiilor au fost adăugate corect
+    // verficam daca restul de date e corect
     assert(strcmp(tranzactii[0].tip, "adaugare") == 0);
     assert(tranzactii[0].suma == 100);
     assert(strcmp(tranzactii[0].descriere, "Depunere banca") == 0);
@@ -219,9 +219,6 @@ void test_vizualizare_in_functie_de_tip() {
 }
 
 
-
-
-
 void vizualizare_in_interval_de_la_initial_final(int zi_initial, int luna_initial, int an_initial, int zi_final, int luna_final, int an_final){
     // interval de timp (zi,luna,an -> zi1,luna1,an1)
     for(int i = 0; i < numar_tranzactie; i++) {
@@ -308,6 +305,7 @@ void test_descarca() {
 
 
 void ruleaza_teste(){
+    // apelare teste
     test_adauga_test();
     testeaza_sold();
     test_vizualizare_in_functie_de_tip();
@@ -316,7 +314,9 @@ void ruleaza_teste(){
 
 void meniu(int optiune){
     int meniu = 0;
+    // teste pt functii semnificative
     ruleaza_teste();
+    // curatare
     system("cls");
     numar_tranzactie = 0;
     // cat timp meniu va fii 0
@@ -381,6 +381,7 @@ void meniu(int optiune){
         }
     }
 }
+
 
 int main(){
     int optiune = 0;
