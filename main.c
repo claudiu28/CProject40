@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <assert.h>
 
 // strcuctura pentru tranzactii, ce contine data(format: zi luna an), suma, tip si descrierea
 struct Tranzactii{
@@ -77,6 +78,21 @@ void adaugare_tranzactie(){
     numar_tranzactie++;
     printf("Adaugare tranzactie cu success!!!\n");
 }
+void adauga_tranzactie_test(int zi, int luna, int an, float suma, char *tip, char *descriere) {
+    // test pentru adugare tranzactie
+    if (numar_tranzactie >= 1000) {
+        return;
+    }
+
+    struct Tranzactii *t = &tranzactii[numar_tranzactie++];
+    t->zi = zi;
+    t->luna = luna;
+    t->an = an;
+    t->suma = suma;
+    strcpy(t->tip, tip);
+    strcpy(t->descriere, descriere);
+}
+
 void vizualizare(){
     // afisarea tuturor tranzactior
     for(int i = 0; i < numar_tranzactie; ++i){
@@ -126,6 +142,22 @@ float sold_cont(){
     }
     return suma;
 }
+
+void testeaza_sold(){
+    numar_tranzactie = 0; // Resetăm numărul de tranzacții
+
+    adauga_tranzactie_test(1, 1, 2020, 100, "adaugare", "Depunere banca");
+    adauga_tranzactie_test(2, 1, 2020, 50, "retragere", "Retragere banca");
+
+    float sold = sold_cont();
+    assert(sold == 50.000000);
+    float sold_negativ = sold_cont_stergere();
+    assert(sold_negativ == -50.000000);
+    float sold_pozitiv = sold_cont_adaugare();
+    assert(sold_pozitiv ==100.000000);
+}
+
+
 
 void vizualizare_in_functie_de_tip(char tipul[]){
     // analizam tipul (adaugare/ retragere) si afisam corespunzator in caz ca nu corespunze tipului afisam un mesaj desptre tipul afisat citit gresit
@@ -216,6 +248,12 @@ void incarca_date(){
 
 void meniu(int optiune){
     int meniu = 0;
+    testeaza_sold();
+    int contor = 0;
+    for(int i = 0; i < numar_tranzactie; i++){
+        contor++;
+    }
+    numar_tranzactie = numar_tranzactie - contor;
     // cat timp meniu va fii 0
     while(meniu == 0){
         meniu_optiuni(); // afisam optiunile din meniu
@@ -274,6 +312,7 @@ void meniu(int optiune){
         }else{
             // caz in care nu e valida optiunea
             printf("Optiune invalida!!!\n");
+            break;
         }
     }
 }
