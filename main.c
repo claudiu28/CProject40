@@ -10,25 +10,20 @@ struct Tranzactii{
     char tip[10], descriere[500];
 }tranzactii[1000];
 
-
 // un contor pentru a numara cate tranzactii avem in cont
 int numar_tranzactie;
 
-
 void meniu_optiuni(){
     // optiuni disponibile in aplicatie
-    printf("1. Tranzactie noua: adaugare, stergere;\n");
+    printf("1. Tranzactie noua: adaugare, retragere;\n");
     printf("2. Vizualizare tranzactii;\n");
     printf("3. Sold actual cont;\n");
-    printf("4. Vizualizare tranzactii in functie de tip -> adaugare/stergere;\n");
+    printf("4. Vizualizare tranzactii in functie de tip -> adaugare/retragere;\n");
     printf("5. Vizualizare tranzactii in functie de intervalul de timp;\n");
     printf("6. Descarca in fila txt datele despre cont;\n");
     printf("7. Incarca date financiare in cont;\n");
     printf("8. Iesire aplicatie;\n");
 }
-
-
-
 int optiune_valida(int optiune){
     // validare optiune este corepsunzatoare
     if(optiune >= 1 && optiune <= 8)
@@ -38,15 +33,14 @@ int optiune_valida(int optiune){
 
 
 
+
 void adaugare_tranzactie(){
     // daca am depasit numarul de tranzactii
     if(numar_tranzactie >= 1000){
         printf("Nu mai sunt loc de tranzactii, au depasit limita maxima!!!\n");
     }
-
     struct Tranzactii *t = &tranzactii[numar_tranzactie];
     while (getchar() != '\n'); // golire buffer
-
 
     // citire tipul tranzactiei + compararea pentru a verifica daca corespune datelor valide pe care utilizatorul trebuie sa le introduca pentru tip
     printf("Introduceti tipul(adaugare/retragere): ");
@@ -79,15 +73,15 @@ void adaugare_tranzactie(){
         t->zi = zi;
         t->luna = luna;
         t->an = an;
-    }else{printf("Date invalide!!\n"); return;}
+    }else{
+        printf("Date invalide!!\n"); return;
+    }
+
     while (getchar() != '\n');
-
-
     // aduna, in contorul de tranzactii + afisam ca s-a creat o noua tranzactie
     numar_tranzactie++;
     printf("Adaugare tranzactie cu success!!!\n");
 }
-
 
 void adauga_tranzactie_test(int zi, int luna, int an, float suma, char *tip, char *descriere) {
     // test pentru adugare tranzactie
@@ -109,10 +103,10 @@ void test_adauga_test(){
     adauga_tranzactie_test(1, 1, 2020, 100, "adaugare", "Depunere banca");
     adauga_tranzactie_test(2, 1, 2020, 50, "retragere", "Retragere banca");
 
-    // numar de tranzactii este corect, vf
+    // Verificăm că numărul de tranzacții s-a incrementat corect
     assert(numar_tranzactie == 2);
 
-    // verficam daca restul de date e corect
+    // Verificăm că tipul, suma și descrierea tranzacțiilor au fost adăugate corect
     assert(strcmp(tranzactii[0].tip, "adaugare") == 0);
     assert(tranzactii[0].suma == 100);
     assert(strcmp(tranzactii[0].descriere, "Depunere banca") == 0);
@@ -121,6 +115,7 @@ void test_adauga_test(){
     assert(tranzactii[1].suma == 50);
     assert(strcmp(tranzactii[1].descriere, "Retragere banca") == 0);
 }
+
 
 
 
@@ -163,7 +158,6 @@ float sold_cont_stergere(){
 }
 
 float sold_cont(){
-
     float suma = 0;
     // in functie de tip cati bani mai avem in cont
     for(int i = 0; i < numar_tranzactie; ++i){
@@ -194,9 +188,9 @@ void testeaza_sold(){
 
 
 
+
 void vizualizare_in_functie_de_tip(char tipul[]){
-    // analizam tipul (adaugare/ retragere) si afisam corespunzator in caz ca nu corespunze
-    // tipului afisam un mesaj desptre tipul afisat citit gresit
+    // analizam tipul (adaugare/ retragere) si afisam corespunzator in caz ca nu corespunze tipului afisam un mesaj desptre tipul afisat citit gresit
     for(int i = 0; i < numar_tranzactie; i++){
         struct Tranzactii *t = &tranzactii[i];
         if(strcmp(t->tip,tipul) == 0){
@@ -207,7 +201,6 @@ void vizualizare_in_functie_de_tip(char tipul[]){
             printf("Descirerea este: %s\n", t->descriere);
         }
     }
-
 }
 
 void test_vizualizare_in_functie_de_tip() {
@@ -223,6 +216,9 @@ void test_vizualizare_in_functie_de_tip() {
     assert(tranzactii[2].suma == 200.000000);
 
 }
+
+
+
 
 
 void vizualizare_in_interval_de_la_initial_final(int zi_initial, int luna_initial, int an_initial, int zi_final, int luna_final, int an_final){
@@ -278,8 +274,6 @@ void descarca_date(){
     }
 }
 
-
-
 void incarca_date(){
     // citirie date din fisier a datelor si adaugare in structura
     FILE *date = fopen("data_financiare.txt", "r");
@@ -295,18 +289,17 @@ void incarca_date(){
             break;
         }
     }
-
+    printf("Dare adaugate cu succez: %d\n");
     fclose(date);
 }
-
 
 void test_descarca() {
     numar_tranzactie = 0; // reset numar tranzatie
 
-    adauga_tranzactie_test(1, 1, 2020, 100, "adaugare", "Depunere din banca!!");
-    adauga_tranzactie_test(2, 2, 2020, 50, "retragere", "Retragere din banca");
-    adauga_tranzactie_test(3, 3, 2020, 200, "adaugare", "Depunere din banca!!");
-    adauga_tranzactie_test(4, 4, 2020, 300, "retragere", "Retragere din banca!!");
+    adauga_tranzactie_test(1, 1, 2020, 100, "adaugare", "Depunere banca");
+    adauga_tranzactie_test(2, 2, 2020, 50, "retragere", "Retragere banca");
+    adauga_tranzactie_test(3, 3, 2020, 200, "adaugare", "Depunere ATM");
+    adauga_tranzactie_test(4, 4, 2020, 300, "retragere", "Retragere ATM");
 
     // descarcam date in fisierul corepsunzator
     descarca_date();
@@ -314,7 +307,6 @@ void test_descarca() {
 
 
 void ruleaza_teste(){
-    // apelare teste
     test_adauga_test();
     testeaza_sold();
     test_vizualizare_in_functie_de_tip();
@@ -323,9 +315,7 @@ void ruleaza_teste(){
 
 void meniu(int optiune){
     int meniu = 0;
-    // teste pt functii semnificative
     ruleaza_teste();
-    // curatare
     system("cls");
     numar_tranzactie = 0;
     // cat timp meniu va fii 0
@@ -390,8 +380,6 @@ void meniu(int optiune){
         }
     }
 }
-
-
 
 int main(){
     int optiune = 0;
